@@ -1,0 +1,24 @@
+{
+    "name": "hellosworldos/git-tools",
+    "license": "MIT",
+    "type": "project",
+    "description": "Library to merge git branches automatically for acceptance testing",
+    "autoload": {
+        "psr-4": {
+            "Hellosworldos\\GitTools": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\Hellosworldos\\GitTools": "spec/"
+        }
+    },
+    "require": {
+        "phpspec/phpspec": "^3.1",
+        "cpliakas/git-wrapper": "^1.7",
+        "symfony/yaml": "^3.1"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^3.1"
+    }
+}
