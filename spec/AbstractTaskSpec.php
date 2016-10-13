@@ -3,14 +3,15 @@
 namespace spec\Hellosworldos\GitTools;
 
 use Hellosworldos\GitTools\BranchInfoInterface;
-use Hellosworldos\GitTools\Task;
+use Hellosworldos\GitTools\AbstractTask;
 use Hellosworldos\GitTools\TaskInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-abstract class TaskSpec extends ObjectBehavior
+abstract class AbstractTaskSpec extends ObjectBehavior
 {
     private $branchInfo;
+    private $name;
 
     function it_is_initializable()
     {
@@ -20,7 +21,8 @@ abstract class TaskSpec extends ObjectBehavior
     function let(BranchInfoInterface $branchInfo)
     {
         $this->branchInfo = $branchInfo;
-        $this->beConstructedWith($this->branchInfo);
+        $this->name       = 'task_name';
+        $this->beConstructedWith($this->name, $this->branchInfo);
     }
 
     function it_should_have_branch_info()
@@ -31,5 +33,10 @@ abstract class TaskSpec extends ObjectBehavior
     function it_should_implement_task()
     {
         $this->shouldBeAnInstanceOf(TaskInterface::class);
+    }
+
+    function it_should_have_name()
+    {
+        $this->getName()->shouldBe($this->name);
     }
 }

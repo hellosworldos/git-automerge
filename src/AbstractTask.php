@@ -2,16 +2,18 @@
 
 namespace Hellosworldos\GitTools;
 
-abstract class Task implements TaskInterface
+abstract class AbstractTask implements TaskInterface
 {
     /**
      * @var BranchInfoInterface
      */
     private $branchInfo;
+    private $name;
 
-    public function __construct(BranchInfoInterface $branchInfo)
+    public function __construct($name, BranchInfoInterface $branchInfo)
     {
         $this->branchInfo = $branchInfo;
+        $this->name       = $name;
     }
 
     /**
@@ -22,8 +24,8 @@ abstract class Task implements TaskInterface
         return $this->branchInfo;
     }
 
-    /**
-     * @return mixed
-     */
-    abstract public function run();
+    public function getName()
+    {
+        return $this->name;
+    }
 }

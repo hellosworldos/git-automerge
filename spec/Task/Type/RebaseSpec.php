@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Hellosworldos\GitTools\Task\Type\Git;
+namespace spec\Hellosworldos\GitTools\Task\Type;
 
-use Hellosworldos\GitTools\Task\Type\Git\Rebase;
+use Hellosworldos\GitTools\Task\Type\Rebase;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

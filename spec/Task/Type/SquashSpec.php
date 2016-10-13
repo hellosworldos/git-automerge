@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Hellosworldos\GitTools\Task\Type\Git;
+namespace spec\Hellosworldos\GitTools\Task\Type;
 
-use Hellosworldos\GitTools\Task\Type\Git\Squash;
+use Hellosworldos\GitTools\Task\Type\Squash;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
