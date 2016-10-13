@@ -2,22 +2,16 @@
 
 namespace Hellosworldos\GitTools;
 
-class Task
+abstract class Task implements TaskInterface
 {
     /**
      * @var BranchInfoInterface
      */
     private $branchInfo;
 
-    /**
-     * @param BranchInfoInterface $branchInfo
-     * @return $this
-     */
-    public function setBranchInfo(BranchInfoInterface $branchInfo)
+    public function __construct(BranchInfoInterface $branchInfo)
     {
         $this->branchInfo = $branchInfo;
-
-        return $this;
     }
 
     /**
@@ -28,8 +22,8 @@ class Task
         return $this->branchInfo;
     }
 
-    public function addSubtask()
-    {
-        // TODO: write logic here
-    }
+    /**
+     * @return mixed
+     */
+    abstract public function run();
 }

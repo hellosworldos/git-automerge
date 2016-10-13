@@ -42,6 +42,7 @@ class BranchInfoSpec extends ObjectBehavior
     {
         $this->getResultBranch()->shouldReturn($this->resultBranch);
     }
+
     function it_should_have_worker_branches()
     {
         $this->getProcessingBranches()->shouldReturn($this->processingBranches);
