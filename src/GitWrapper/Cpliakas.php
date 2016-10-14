@@ -3,14 +3,31 @@
 namespace Hellosworldos\GitTools\GitWrapper;
 
 use GitWrapper\GitWrapper;
+use GitWrapper\GitWorkingCopy;
+use Hellosworldos\GitTools\GitWorkspaceInterface;
+use Hellosworldos\GitTools\GitWrapperInterface;
 
-class Cpliakas
+class Cpliakas implements GitWrapperInterface
 {
-    private $wrapper;
+    private $workingCopy;
+    private $workspace;
 
-    public function __construct(GitWrapper $wrapper)
+    /**
+     * @param GitWorkingCopy $workingCopy
+     * @param GitWorkspaceInterface $workspace
+     */
+    public function __construct(GitWorkingCopy $workingCopy, GitWorkspaceInterface $workspace)
     {
-        $this->wrapper = $wrapper;
+        $this->workingCopy = $workingCopy;
+        $this->workspace   = $workspace;
+    }
+
+    /**
+     * @return GitWorkingCopy
+     */
+    protected function getWorkingCopy()
+    {
+        return $this->workingCopy;
     }
 
     public function merge($toBranch, $fromBranch, array $options)
@@ -18,8 +35,10 @@ class Cpliakas
         return $this;
     }
 
-    public function checkout($argument1)
+    public function checkout($branch)
     {
-        // TODO: write logic here
+        $this->getWorkingCopy()->checkout($branch);
+
+        return $this;
     }
 }
