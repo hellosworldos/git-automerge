@@ -2,7 +2,7 @@
 
 namespace spec\Hellosworldos\GitTools;
 
-use Hellosworldos\GitTools\BranchInfoInterface;
+use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\AbstractTask;
 use Hellosworldos\GitTools\TaskInterface;
 use PhpSpec\ObjectBehavior;
@@ -10,24 +10,19 @@ use Prophecy\Argument;
 
 abstract class AbstractTaskSpec extends ObjectBehavior
 {
-    private $branchInfo;
+    private $gitWrapper;
     private $name;
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(Task::class);
+        $this->shouldHaveType(AbstractTask::class);
     }
 
-    function let(BranchInfoInterface $branchInfo)
+    function let(GitWrapperInterface $gitWrapper)
     {
-        $this->branchInfo = $branchInfo;
+        $this->gitWrapper = $gitWrapper;
         $this->name       = 'task_name';
-        $this->beConstructedWith($this->name, $this->branchInfo);
-    }
-
-    function it_should_have_branch_info()
-    {
-        $this->getBranchInfo()->shouldBe($this->branchInfo);
+        $this->beConstructedWith($this->name, $this->gitWrapper);
     }
 
     function it_should_implement_task()

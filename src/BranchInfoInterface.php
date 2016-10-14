@@ -4,6 +4,8 @@ namespace Hellosworldos\GitTools;
 
 interface BranchInfoInterface
 {
+    const ORIGIN = 'origin';
+
     /**
      * @return string
      */
@@ -18,4 +20,9 @@ interface BranchInfoInterface
      * @return array
      */
     public function getProcessingBranches();
+
+    /**
+     * @return string
+     */
+    public function getOrigin();
 }

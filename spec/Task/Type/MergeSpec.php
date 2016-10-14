@@ -2,9 +2,10 @@
 
 namespace spec\Hellosworldos\GitTools\Task\Type;
 
+use Hellosworldos\GitTools\BranchInfoInterface;
+use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\Task\Type\Merge;
 use Hellosworldos\GitTools\AbstractTask;
-use Hellosworldos\GitTools\BranchInfoInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -16,13 +17,13 @@ class MergeSpec extends ObjectBehavior
         $this->shouldImplement(AbstractTask::class);
     }
 
-    function let(BranchInfoInterface $branchInfo)
+    function let(GitWrapperInterface $gitWrapper)
     {
-        $this->beConstructedWith('task_name', $branchInfo);
+        $this->beConstructedWith('task_name', $gitWrapper);
     }
 
-    function it_runs_merge()
+    function it_runs_merge(BranchInfoInterface $branchInfo)
     {
-        $this->run('master', 'result', 'processing');
+        $this->run($branchInfo);
     }
 }

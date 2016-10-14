@@ -47,4 +47,16 @@ class BranchInfoSpec extends ObjectBehavior
     {
         $this->getProcessingBranches()->shouldReturn($this->processingBranches);
     }
+
+    function it_should_have_origin()
+    {
+        $this->getOrigin()->shouldReturn(BranchInfoInterface::ORIGIN);
+    }
+
+    function it_should_be_able_to_change_origin()
+    {
+        $newOrigin = 'new_origin';
+        $this->setOrigin($newOrigin)->shouldReturn($this);
+        $this->getOrigin()->shouldReturn($newOrigin);
+    }
 }
