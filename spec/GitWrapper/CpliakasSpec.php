@@ -43,10 +43,15 @@ class CpliakasSpec extends ObjectBehavior
     {
         $toBranch = 'toBranch';
 
-
         $this->merge($toBranch, 'joinBranch', [
             GitWrapperInterface::MERGE_NOFF => true
         ])->shouldReturn($this);
+    }
+
+    function it_should_throw_exception_if_merge_called_without_first_2_params()
+    {
+        $this->shouldThrow()->during('merge', ['first']);
+        $this->shouldThrow()->during('merge', []);
     }
 
     function it_should_checkout_branch()

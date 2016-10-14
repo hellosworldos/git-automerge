@@ -7,6 +7,10 @@ abstract class AbstractTask implements TaskInterface
     private $gitWrapper;
     private $name;
 
+    /**
+     * @param string $name
+     * @param GitWrapperInterface $gitWrapper
+     */
     public function __construct($name, GitWrapperInterface $gitWrapper)
     {
         $this->gitWrapper = $gitWrapper;

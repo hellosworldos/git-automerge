@@ -11,6 +11,8 @@ use Prophecy\Argument;
 
 class MergeSpec extends ObjectBehavior
 {
+    private $gitWrapper;
+
     function it_is_initializable()
     {
         $this->shouldHaveType(Merge::class);
@@ -19,11 +21,17 @@ class MergeSpec extends ObjectBehavior
 
     function let(GitWrapperInterface $gitWrapper)
     {
-        $this->beConstructedWith('task_name', $gitWrapper);
+        $this->gitWrapper = $gitWrapper;
+        $this->beConstructedWith('task_name', $this->gitWrapper);
     }
 
     function it_runs_merge(BranchInfoInterface $branchInfo)
     {
+        $this->gitWrapper
+            ->merge(Argument::type('string'), Argument::type('string'), Argument::type('array'))
+            ->shouldBeCalled();
+        $branchInfo->getMasterBranch()->willReturn('string');
+        $branchInfo->getProcessingBranches()->willReturn(['processing1']);
         $this->run($branchInfo);
     }
 }
