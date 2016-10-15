@@ -71,4 +71,17 @@ class CpliakasSpec extends ObjectBehavior
 
         $this->copyBranch($newBranch)->shouldReturn($this);
     }
+
+    function it_should_remove_branch()
+    {
+        $branch = 'removedBranch';
+        $this->workingCopy
+            ->branch($branch, [
+                GitWrapperInterface::BRANCH_FORCE  => true,
+                GitWrapperInterface::BRANCH_DELETE => true,
+            ])
+            ->shouldBeCalled();
+
+        $this->removeBranch($branch)->shouldReturn($this);
+    }
 }

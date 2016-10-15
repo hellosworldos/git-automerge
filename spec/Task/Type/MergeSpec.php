@@ -27,6 +27,9 @@ class MergeSpec extends ObjectBehavior
 
     function it_runs_merge(BranchInfoInterface $branchInfo)
     {
+        $branchInfo->getMasterBranch()->shouldBeCalled();
+        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn('resultBranch');
+        $branchInfo->getProcessingBranches()->shouldBeCalled();
 
         $this->gitWrapper
             ->checkout(Argument::type('string'))
@@ -40,9 +43,16 @@ class MergeSpec extends ObjectBehavior
 
         $this->gitWrapper
             ->merge(Argument::type('string'), Argument::type('array'))
-            ->shouldBeCalled();
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->removeBranch(Argument::type('string'))
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
         $branchInfo->getMasterBranch()->willReturn('string');
         $branchInfo->getProcessingBranches()->willReturn(['processing1']);
-        $this->run($branchInfo);
+        $this->run($branchInfo)->shouldReturn(true);
     }
 }

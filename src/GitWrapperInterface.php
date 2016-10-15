@@ -4,8 +4,9 @@ namespace Hellosworldos\GitTools;
 
 interface GitWrapperInterface
 {
-    const MERGE_NOFF   = 'no-ff';
-    const BRANCH_FORCE = 'force';
+    const MERGE_NOFF    = 'no-ff';
+    const BRANCH_FORCE  = 'force';
+    const BRANCH_DELETE = 'delete';
 
     /**
      * @param string $withBranch
@@ -25,4 +26,10 @@ interface GitWrapperInterface
      * @return $this
      */
     public function copyBranch($newBranch);
+
+    /**
+     * @param string $branch
+     * @return $this
+     */
+    public function removeBranch($branch);
 }

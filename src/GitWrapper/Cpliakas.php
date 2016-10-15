@@ -67,4 +67,18 @@ class Cpliakas implements GitWrapperInterface
 
         return $this;
     }
+
+    /**
+     * @param string $branch
+     * @return $this
+     */
+    public function removeBranch($branch)
+    {
+        $this->getWorkingCopy()->branch($branch, [
+            static::BRANCH_FORCE  => true,
+            static::BRANCH_DELETE => true,
+        ]);
+
+        return $this;
+    }
 }

@@ -18,7 +18,7 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * @return GitWraooerInterface
+     * @return GitWrapperInterface
      */
     protected function getGitWrapper()
     {
