@@ -3,6 +3,7 @@
 namespace spec\Hellosworldos\GitTools\GitWrapper;
 
 use GitWrapper\GitWorkingCopy;
+use Hellosworldos\GitTools\BranchInfoInterface;
 use Hellosworldos\GitTools\GitWrapper\Cpliakas;
 use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\GitWorkspaceInterface;
@@ -11,6 +12,9 @@ use Prophecy\Argument;
 
 class CpliakasSpec extends ObjectBehavior
 {
+    /**
+     * @var GitWorkingCopy
+     */
     private $workingCopy;
     private $workspace;
 
@@ -24,33 +28,26 @@ class CpliakasSpec extends ObjectBehavior
     {
         $this->workingCopy = $workingCopy;
         $this->workspace   = $workspace;
+        $workingCopy->isCloned()->shouldBeCalled()->willReturn(true);
         $this->beConstructedWith($this->workingCopy, $this->workspace);
     }
 
     function it_must_have_working_copy_in_constructor(GitWorkspaceInterface $workspace)
     {
-        $this->beConstructedWith('invalid', $workspace);
-        $this->shouldThrow()->duringInstantiation();
+        $this->workingCopy->isCloned()->shouldNotBeCalled();
+        $this->shouldThrow()->during('__construct', ['invalid', $workspace]);
     }
 
     function it_must_have_workspace_in_constructor(GitWorkingCopy $workingCopy)
     {
-        $this->beConstructedWith($workingCopy, 'invalid');
-        $this->shouldThrow()->duringInstantiation();
-    }
-
-    function it_should_merge_branches()
-    {
-        $toBranch = 'toBranch';
-
-        $this->merge($toBranch, 'joinBranch', [
-            GitWrapperInterface::MERGE_NOFF => true
-        ])->shouldReturn($this);
+        $this->workingCopy->isCloned()->shouldNotBeCalled();
+        $this->shouldThrow()->during('__construct', [$workingCopy, 'invalid']);
     }
 
     function it_should_throw_exception_if_merge_called_without_first_2_params()
     {
-        $this->shouldThrow()->during('merge', ['first']);
+        $this->shouldThrow()->during('merge', ['string', 'string', 'notarray']);
+        $this->shouldThrow()->during('merge', ['string']);
         $this->shouldThrow()->during('merge', []);
     }
 
@@ -58,5 +55,20 @@ class CpliakasSpec extends ObjectBehavior
     {
         $this->workingCopy->checkout(Argument::type('string'))->shouldBeCalled();
         $this->checkout('branchName')->shouldReturn($this);
+    }
+
+    function it_should_merge_branches()
+    {
+        $this->workingCopy->merge(Argument::type('string'), Argument::type('array'))->shouldBeCalled();
+
+        $this->merge('joinBranch', [GitWrapperInterface::MERGE_NOFF => true])->shouldReturn($this);
+    }
+
+    function it_should_copy_branch()
+    {
+        $newBranch = 'newBranch';
+        $this->workingCopy->branch($newBranch, [GitWrapperInterface::BRANCH_FORCE => true])->shouldBeCalled();
+
+        $this->copyBranch($newBranch)->shouldReturn($this);
     }
 }

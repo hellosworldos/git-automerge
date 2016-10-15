@@ -20,6 +20,8 @@ class Cpliakas implements GitWrapperInterface
     {
         $this->workingCopy = $workingCopy;
         $this->workspace   = $workspace;
+
+        $workingCopy->isCloned();
     }
 
     /**
@@ -30,14 +32,38 @@ class Cpliakas implements GitWrapperInterface
         return $this->workingCopy;
     }
 
-    public function merge($toBranch, $fromBranch, array $options)
+    /**
+     * @param string $withBranch
+     * @param array $options
+     * @return $this
+     */
+    public function merge($withBranch, array $options)
     {
+        $this->getWorkingCopy()->merge($withBranch, $options);
+
         return $this;
     }
 
+    /**
+     * @param string $branch
+     * @return $this
+     */
     public function checkout($branch)
     {
         $this->getWorkingCopy()->checkout($branch);
+
+        return $this;
+    }
+
+    /**
+     * @param string $newBranch
+     * @return $this
+     */
+    public function copyBranch($newBranch)
+    {
+        $this->getWorkingCopy()->branch($newBranch, [
+            static::BRANCH_FORCE => true,
+        ]);
 
         return $this;
     }

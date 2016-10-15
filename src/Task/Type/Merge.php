@@ -11,9 +11,13 @@ class Merge extends AbstractTask
     public function run(BranchInfoInterface $branchInfo)
     {
         foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
-            $this->getGitWrapper()->merge($branchInfo->getMasterBranch(), $processingBranch, [
-                GitWrapperInterface::MERGE_NOFF => true,
-            ]);
+            $tmpBranch = $this->generateTmpBranch();
+            $this->getGitWrapper()
+                ->checkout($processingBranch)
+                ->checkout($branchInfo->getMasterBranch())
+                ->copyBranch($tmpBranch)
+                ->checkout($tmpBranch)
+                ->merge($processingBranch, [GitWrapperInterface::MERGE_NOFF => true]);
         }
     }
 }

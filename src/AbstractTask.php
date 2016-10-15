@@ -29,4 +29,12 @@ abstract class AbstractTask implements TaskInterface
     {
         return $this->name;
     }
+
+    /**
+     * @return string
+     */
+    protected function generateTmpBranch()
+    {
+        return 'tmp/'.md5(uniqid(mt_rand())).'_'.time();
+    }
 }
