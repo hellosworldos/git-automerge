@@ -38,4 +38,17 @@ interface GitWrapperInterface
      * @return $this
      */
     public function rebase($fromBranch);
+
+    /**
+     * @param string $fromBranch
+     * @param string $toBranch
+     * @return string
+     */
+    public function diff($fromBranch, $toBranch);
+
+    /**
+     * @param string $patchPath
+     * @return $this
+     */
+    public function apply($patchPath);
 }
