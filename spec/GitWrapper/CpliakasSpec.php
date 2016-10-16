@@ -84,4 +84,12 @@ class CpliakasSpec extends ObjectBehavior
 
         $this->removeBranch($branch)->shouldReturn($this);
     }
+
+    function it_should_rebase_branch()
+    {
+        $branch = 'branch';
+        $this->workingCopy->rebase($branch)->shouldBeCalled();
+
+        $this->rebase($branch)->shouldReturn($this);
+    }
 }

@@ -32,4 +32,10 @@ interface GitWrapperInterface
      * @return $this
      */
     public function removeBranch($branch);
+
+    /**
+     * @param string $fromBranch
+     * @return $this
+     */
+    public function rebase($fromBranch);
 }

@@ -11,6 +11,7 @@ class Merge extends AbstractTask
     /**
      * @param BranchInfoInterface $branchInfo
      * @return bool
+     * @TODO implement fault tolerance
      */
     public function run(BranchInfoInterface $branchInfo)
     {
@@ -26,8 +27,8 @@ class Merge extends AbstractTask
                 ->copyBranch($branchInfo->getResultBranch())
                 ->checkout($branchInfo->getResultBranch())
                 ->removeBranch($tmpBranch);
-
-            return true;
         }
+
+        return true;
     }
 }

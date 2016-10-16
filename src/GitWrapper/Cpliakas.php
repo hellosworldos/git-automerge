@@ -81,4 +81,16 @@ class Cpliakas implements GitWrapperInterface
 
         return $this;
     }
+
+    /**
+     * @param string $fromBranch
+     * @return $this
+     */
+    public function rebase($fromBranch)
+    {
+        $this->getWorkingCopy()->rebase($fromBranch);
+
+        return $this;
+    }
+
 }

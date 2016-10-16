@@ -25,7 +25,7 @@ class MergeSpec extends ObjectBehavior
         $this->beConstructedWith('task_name', $this->gitWrapper);
     }
 
-    function it_runs_merge(BranchInfoInterface $branchInfo)
+    function it_runs(BranchInfoInterface $branchInfo)
     {
         $branchInfo->getMasterBranch()->shouldBeCalled();
         $branchInfo->getResultBranch()->shouldBeCalled()->willReturn('resultBranch');
