@@ -11,10 +11,11 @@ class Squash extends AbstractTask
     public function run(BranchInfoInterface $branchInfo)
     {
         foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
+            $patchFileName = $this->getPatchTmpFileName();
             $patchContents = $this->getGitWrapper()
                 ->checkout($branchInfo->getMasterBranch())
                 ->checkout($processingBranch)
-                ->diff($branchInfo->getMasterBranch(), $processingBranch);
+                ->diff($branchInfo->getMasterBranch(), $processingBranch, $patchFileName);
 
             // @TODO add stramline to file
 

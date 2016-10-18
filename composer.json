@@ -14,9 +14,10 @@
         }
     },
     "require": {
-        "phpspec/phpspec": "^3.1",
         "cpliakas/git-wrapper": "^1.7",
-        "symfony/filesystem": "^3.1"
+        "symfony/filesystem": "^3.1",
+        "symfony/event-dispatcher": "^3.1",
+        "guzzlehttp/streams": "^3.0"
     },
     "require-dev": {
         "phpspec/phpspec": "^3.1"

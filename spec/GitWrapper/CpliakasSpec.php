@@ -92,4 +92,14 @@ class CpliakasSpec extends ObjectBehavior
 
         $this->rebase($branch)->shouldReturn($this);
     }
+
+    function it_should_diff_branches()
+    {
+        $branch1    = 'branch1';
+        $branch2    = 'branch2';
+        $outputFile = '/file';
+        $this->workingCopy->diff($branch1, $branch2)->shouldBeCalled();
+
+        $this->diff($branch1, $branch2, $outputFile)->shouldReturn($this);
+    }
 }

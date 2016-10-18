@@ -42,7 +42,7 @@ class SquashSpec extends ObjectBehavior
             ->willReturn($this->gitWrapper);
 
         $this->gitWrapper
-            ->diff(Argument::type('string'), Argument::type('string'))
+            ->diff(Argument::type('string'), Argument::type('string'), Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
@@ -50,6 +50,9 @@ class SquashSpec extends ObjectBehavior
             ->apply(Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
+
+        // @TODO call commit
+        // @TODO call remove patch file
 
         $this->run($branchInfo)->shouldReturn(true);
     }

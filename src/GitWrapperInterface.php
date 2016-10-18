@@ -42,9 +42,10 @@ interface GitWrapperInterface
     /**
      * @param string $fromBranch
      * @param string $toBranch
+     * @param string $outputFilePath
      * @return string
      */
-    public function diff($fromBranch, $toBranch);
+    public function diff($fromBranch, $toBranch, $outputFilePath);
 
     /**
      * @param string $patchPath

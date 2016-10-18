@@ -96,11 +96,14 @@ class Cpliakas implements GitWrapperInterface
     /**
      * @param string $fromBranch
      * @param string $toBranch
+     * @param string $outputFilePath
      * @return string
      */
-    public function diff($fromBranch, $toBranch)
+    public function diff($fromBranch, $toBranch, $outputFilePath)
     {
+        $this->getWorkingCopy()->diff($fromBranch, $toBranch);
 
+        return $this;
     }
 
     /**
