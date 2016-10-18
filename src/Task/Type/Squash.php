@@ -4,7 +4,6 @@ namespace Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\AbstractTask;
 use Hellosworldos\GitTools\BranchInfoInterface;
-use Hellosworldos\GitTools\StreamFactoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Squash extends AbstractTask

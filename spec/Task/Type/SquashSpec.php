@@ -3,7 +3,6 @@
 namespace spec\Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\BranchInfoInterface;
-use Hellosworldos\GitTools\StreamFactoryInterface;
 use Hellosworldos\GitTools\Task\Type\Squash;
 use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\AbstractTask;

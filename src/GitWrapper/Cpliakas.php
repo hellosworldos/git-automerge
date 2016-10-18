@@ -6,20 +6,27 @@ use GitWrapper\GitWrapper;
 use GitWrapper\GitWorkingCopy;
 use Hellosworldos\GitTools\GitWorkspaceInterface;
 use Hellosworldos\GitTools\GitWrapperInterface;
+use Hellosworldos\GitTools\StreamFactoryInterface;
 
 class Cpliakas implements GitWrapperInterface
 {
     private $workingCopy;
     private $workspace;
+    private $streamFactory;
 
     /**
      * @param GitWorkingCopy $workingCopy
      * @param GitWorkspaceInterface $workspace
      */
-    public function __construct(GitWorkingCopy $workingCopy, GitWorkspaceInterface $workspace)
+    public function __construct(
+        GitWorkingCopy $workingCopy,
+        GitWorkspaceInterface $workspace,
+        StreamFactoryInterface $streamFactory
+    )
     {
-        $this->workingCopy = $workingCopy;
-        $this->workspace   = $workspace;
+        $this->workingCopy   = $workingCopy;
+        $this->workspace     = $workspace;
+        $this->streamFactory = $streamFactory;
 
         $workingCopy->isCloned();
     }
@@ -103,7 +110,17 @@ class Cpliakas implements GitWrapperInterface
     {
         $this->getWorkingCopy()->diff($fromBranch, $toBranch);
 
+        $stream = $this->getStreamFactory()->factory($outputFilePath);
+
         return $this;
+    }
+
+    /**
+     * @return StreamFactoryInterface
+     */
+    protected function getStreamFactory()
+    {
+        return $this->streamFactory;
     }
 
     /**

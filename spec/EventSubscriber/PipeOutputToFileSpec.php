@@ -6,6 +6,7 @@ use GitWrapper\Event\GitEvents;
 use GitWrapper\Event\GitOutputEvent;
 use GuzzleHttp\Stream\StreamInterface;
 use Hellosworldos\GitTools\EventSubscriber\PipeOutputToFile;
+use Hellosworldos\GitTools\EventSubscriber\StreamableInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,6 +18,7 @@ class PipeOutputToFileSpec extends ObjectBehavior
     {
         $this->shouldHaveType(PipeOutputToFile::class);
         $this->shouldImplement(EventSubscriberInterface::class);
+        $this->shouldImplement(StreamableInterface::class);
     }
 
     function let()

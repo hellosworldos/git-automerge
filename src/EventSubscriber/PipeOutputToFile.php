@@ -8,7 +8,7 @@ use GuzzleHttp\Stream\StreamInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Process\Process;
 
-class PipeOutputToFile implements EventSubscriberInterface
+class PipeOutputToFile implements EventSubscriberInterface, StreamableInterface
 {
     private $stream;
 

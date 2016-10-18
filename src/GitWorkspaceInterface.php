@@ -11,4 +11,13 @@ namespace Hellosworldos\GitTools;
 
 interface GitWorkspaceInterface
 {
+    /**
+     * @return string
+     */
+    public function getPubKeyPath();
+
+    /**
+     * @return string
+     */
+    public function getRemoteUrl();
 }
