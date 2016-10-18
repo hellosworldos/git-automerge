@@ -8,6 +8,8 @@ use Hellosworldos\GitTools\GitWrapperInterface;
 
 class Merge extends AbstractTask
 {
+    const NAME = 'merge';
+
     /**
      * @param BranchInfoInterface $branchInfo
      * @return bool
@@ -30,5 +32,13 @@ class Merge extends AbstractTask
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return static::NAME;
     }
 }

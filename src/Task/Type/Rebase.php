@@ -7,6 +7,8 @@ use Hellosworldos\GitTools\BranchInfoInterface;
 
 class Rebase extends AbstractTask
 {
+    const NAME = 'rebase';
+
     public function run(BranchInfoInterface $branchInfo)
     {
         foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
@@ -24,5 +26,13 @@ class Rebase extends AbstractTask
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return static::NAME;
     }
 }

@@ -22,7 +22,7 @@ class RebaseSpec extends ObjectBehavior
     function let(GitWrapperInterface $gitWrapper)
     {
         $this->gitWrapper = $gitWrapper;
-        $this->beConstructedWith('task_name', $this->gitWrapper);
+        $this->beConstructedWith($this->gitWrapper);
     }
 
     function it_runs(BranchInfoInterface $branchInfo)
@@ -52,5 +52,10 @@ class RebaseSpec extends ObjectBehavior
             ->willReturn($this->gitWrapper);
 
         $this->run($branchInfo)->shouldReturn(true);
+    }
+
+    function it_should_have_name()
+    {
+        $this->getName()->shouldBe(Rebase::NAME);
     }
 }

@@ -4,10 +4,13 @@ namespace Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\AbstractTask;
 use Hellosworldos\GitTools\BranchInfoInterface;
+use Hellosworldos\GitTools\StreamFactoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Squash extends AbstractTask
 {
+    const NAME = 'squash';
+
     public function run(BranchInfoInterface $branchInfo)
     {
         foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
@@ -51,5 +54,13 @@ class Squash extends AbstractTask
     public function getFilesystem()
     {
         return $this->filesystem;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return static::NAME;
     }
 }

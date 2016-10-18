@@ -9,6 +9,6 @@
 namespace Hellosworldos\GitTools;
 
 
-interface GitWorkspaceInterface {
-
-} 
+interface GitWorkspaceInterface
+{
+}

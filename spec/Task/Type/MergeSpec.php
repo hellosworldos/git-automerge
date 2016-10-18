@@ -22,7 +22,7 @@ class MergeSpec extends ObjectBehavior
     function let(GitWrapperInterface $gitWrapper)
     {
         $this->gitWrapper = $gitWrapper;
-        $this->beConstructedWith('task_name', $this->gitWrapper);
+        $this->beConstructedWith($this->gitWrapper);
     }
 
     function it_runs(BranchInfoInterface $branchInfo)
@@ -54,5 +54,10 @@ class MergeSpec extends ObjectBehavior
         $branchInfo->getMasterBranch()->willReturn('string');
         $branchInfo->getProcessingBranches()->willReturn(['processing1']);
         $this->run($branchInfo)->shouldReturn(true);
+    }
+
+    function it_should_have_name()
+    {
+        $this->getName()->shouldBe(Merge::NAME);
     }
 }

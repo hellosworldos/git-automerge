@@ -3,17 +3,17 @@
 namespace spec\Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\BranchInfoInterface;
+use Hellosworldos\GitTools\StreamFactoryInterface;
 use Hellosworldos\GitTools\Task\Type\Squash;
 use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\AbstractTask;
-use Symfony\Component\Filesystem\Filesystem;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class SquashSpec extends ObjectBehavior
 {
     private $gitWrapper;
-    private $filesystem;
+    private $streamFactory;
 
     function it_is_initializable()
     {
@@ -21,13 +21,18 @@ class SquashSpec extends ObjectBehavior
         $this->shouldImplement(AbstractTask::class);
     }
 
-    function let(GitWrapperInterface $gitWrapper, Filesystem $filesystem)
+    function let(GitWrapperInterface $gitWrapper)
     {
         $this->gitWrapper = $gitWrapper;
-        $this->filesystem = $filesystem;
 
-        $this->beConstructedWith('task_name', $this->gitWrapper);
-        $this->setFilesystem($this->filesystem);
+        $this->beConstructedWith($this->gitWrapper);
+    }
+
+    function it_expects_gitwrapper_for_constructor(GitWrapperInterface $gitWrapper)
+    {
+        $this->shouldThrow()->during('__construct', []);
+        $this->shouldNotThrow()->during('__construct', [$gitWrapper]);
+        $this->shouldThrow()->during('__construct', ['notGitWrapper']);
     }
 
     function it_runs(BranchInfoInterface $branchInfo)
@@ -57,15 +62,20 @@ class SquashSpec extends ObjectBehavior
         $this->run($branchInfo)->shouldReturn(true);
     }
 
-    function it_should_have_filesystem(Filesystem $filesystem)
-    {
-        $this->setFilesystem($filesystem)->shouldReturn($this);
-        $this->getFilesystem()->shouldReturn($filesystem);
-    }
+//    function it_should_have_stream_factory(StreamFactory $streamFactory)
+//    {
+//        $this->setStreamFactory($streamFactory)->shouldReturn($this);
+//        $this->getStreamFactory()->shouldReturn($streamFactory);
+//    }
+//
+//    function it_expects_set_filesystem_to_be_typed(Filesystem $filesystem)
+//    {
+//        $this->shouldThrow()->during('setFilesystem', ['string']);
+//        $this->shouldThrow()->during('setFilesystem', []);
+//    }
 
-    function it_expects_set_filesystem_to_be_typed(Filesystem $filesystem)
+    function it_should_have_name()
     {
-        $this->shouldThrow()->during('setFilesystem', ['string']);
-        $this->shouldThrow()->during('setFilesystem', []);
+        $this->getName()->shouldBe(Squash::NAME);
     }
 }
