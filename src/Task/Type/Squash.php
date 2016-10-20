@@ -17,9 +17,9 @@ class Squash extends AbstractTask
 
             $this->getGitWrapper()
                 ->checkout($branchInfo->getMasterBranch())
-                ->checkout($processingBranch)
-                ->diff($branchInfo->getMasterBranch(), $processingBranch, $patchFileName)
+                ->copyBranch($branchInfo->getResultBranch())
                 ->checkout($branchInfo->getResultBranch())
+                ->diff($branchInfo->getMasterBranch(), $processingBranch, $patchFileName)
                 ->apply($patchFileName)
                 // @TODO add branch message generator
                 ->commit($processingBranch);

@@ -11,6 +11,9 @@ use Prophecy\Argument;
 
 class SquashSpec extends ObjectBehavior
 {
+    /**
+     * @var GitWrapperInterface
+     */
     private $gitWrapper;
     private $streamFactory;
 
@@ -36,17 +39,30 @@ class SquashSpec extends ObjectBehavior
 
     function it_runs(BranchInfoInterface $branchInfo)
     {
-        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn('masterBranch');
-        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn('resultBranch');
-        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn(['processing1']);
+        $masterBranch     = 'masterBranch';
+        $resultBranch     = 'resultBranch';
+        $processingBranch = 'processing1';
+        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn($masterBranch);
+        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn($resultBranch);
+        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn([$processingBranch]);
 
         $this->gitWrapper
-            ->checkout(Argument::type('string'))
+            ->checkout($masterBranch)
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
         $this->gitWrapper
-            ->diff(Argument::type('string'), Argument::type('string'), Argument::type('string'))
+            ->copyBranch($resultBranch)
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->checkout($resultBranch)
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->diff($masterBranch, $processingBranch, Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
