@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b26e0aaac44248247f16ab20a402e7e5",
-    "content-hash": "94835c29e5a3d4b812b085a376fa29f1",
+    "hash": "37084fbe21508bf891c782ac651ca30c",
+    "content-hash": "825abbac3426c212f336d1a3b2d9c2a1",
     "packages": [
         {
             "name": "cpliakas/git-wrapper",
@@ -1265,13 +1265,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "cpliakas/git-wrapper": 0,
-        "symfony/filesystem": 0,
-        "symfony/event-dispatcher": 0,
-        "guzzlehttp/streams": 0,
-        "phpspec/phpspec": 0
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
