@@ -14,12 +14,12 @@
         }
     },
     "require": {
-        "cpliakas/git-wrapper": "^1.7",
-        "symfony/filesystem": "^3.1",
-        "symfony/event-dispatcher": "^3.1",
-        "guzzlehttp/streams": "^3.0"
+        "cpliakas/git-wrapper": "@stable",
+        "symfony/filesystem": "@stable",
+        "symfony/event-dispatcher": "@stable",
+        "guzzlehttp/streams": "@stable"
     },
     "require-dev": {
-        "phpspec/phpspec": "^3.1"
+        "phpspec/phpspec": "@stable"
     }
 }
