@@ -52,4 +52,10 @@ interface GitWrapperInterface
      * @return $this
      */
     public function apply($patchPath);
+
+    /**
+     * @param string $message
+     * @return $this
+     */
+    public function commit($message);
 }

@@ -169,6 +169,19 @@ class Cpliakas implements GitWrapperInterface
      */
     public function apply($patchPath)
     {
+        $this->getWorkingCopy()->apply($patchPath);
 
+        return $this;
+    }
+
+    /**
+     * @param string $message
+     * @return $this
+     */
+    public function commit($message)
+    {
+        $this->getWorkingCopy()->commit($message);
+
+        return $this;
     }
 }

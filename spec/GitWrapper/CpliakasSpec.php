@@ -158,4 +158,22 @@ class CpliakasSpec extends ObjectBehavior
 
         $this->diff($branch1, $branch2, $outputFile)->shouldReturn($this);
     }
+
+    function it_should_apply_diff_file()
+    {
+        $filename = '/tmp/file';
+
+        $this->workingCopy->apply($filename)->shouldBeCalled();
+
+        $this->apply($filename)->shouldReturn($this);
+    }
+
+    function it_should_commit_changes()
+    {
+        $message = 'commit message';
+
+        $this->workingCopy->commit($message)->shouldBeCalled();
+
+        $this->commit($message)->shouldReturn($this);
+    }
 }

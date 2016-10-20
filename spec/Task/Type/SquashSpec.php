@@ -55,7 +55,11 @@ class SquashSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
-        // @TODO call commit
+        $this->gitWrapper
+            ->commit(Argument::type('string'))
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
         // @TODO call remove patch file
 
         $this->run($branchInfo)->shouldReturn(true);

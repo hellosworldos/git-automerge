@@ -14,15 +14,15 @@ class Squash extends AbstractTask
     {
         foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
             $patchFileName = $this->getPatchTmpFileName();
-            $patchContents = $this->getGitWrapper()
+
+            $this->getGitWrapper()
                 ->checkout($branchInfo->getMasterBranch())
                 ->checkout($processingBranch)
-                ->diff($branchInfo->getMasterBranch(), $processingBranch, $patchFileName);
-
-            // @TODO add stramline to file
-
-            $this->getGitWrapper()->checkout($branchInfo->getResultBranch())
-                ->apply($branchInfo->getResultBranch());
+                ->diff($branchInfo->getMasterBranch(), $processingBranch, $patchFileName)
+                ->checkout($branchInfo->getResultBranch())
+                ->apply($patchFileName)
+                // @TODO add branch message generator
+                ->commit($processingBranch);
         }
 
         return true;
