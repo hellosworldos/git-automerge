@@ -2,14 +2,22 @@
 
 namespace Hellosworldos\GitTools;
 
+use GuzzleHttp\Stream\Stream;
+
 class StreamFactory implements StreamFactoryInterface
 {
     /**
      * @param string $filename
-     * @return StreamInterface
+     * @return Stream
      */
-    public function factory($filename)
+    public function makeWritableFile($filename)
     {
+        $stream = Stream::factory($filename, [
+            'metadata' => [
+                'mode' => 'w',
+            ],
+        ]);
 
+        return $stream;
     }
 }

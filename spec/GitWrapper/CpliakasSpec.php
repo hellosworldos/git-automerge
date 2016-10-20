@@ -3,8 +3,8 @@
 namespace spec\Hellosworldos\GitTools\GitWrapper;
 
 use GitWrapper\GitWorkingCopy;
+use GitWrapper\GitWrapper;
 use GuzzleHttp\Stream\StreamInterface;
-use Hellosworldos\GitTools\BranchInfoInterface;
 use Hellosworldos\GitTools\EventSubscriber\StreamableInterface;
 use Hellosworldos\GitTools\GitWrapper\Cpliakas;
 use Hellosworldos\GitTools\GitWrapperInterface;
@@ -22,6 +22,15 @@ class CpliakasSpec extends ObjectBehavior
     private $workspace;
     private $streamFactory;
 
+    /**
+     * @var StreamableInterface
+     */
+    private $streamableEventSubscriber;
+    /**
+     * @var GitWrapper
+     */
+    private $gitWrapper;
+
     function it_is_initializable()
     {
         $this->shouldHaveType(Cpliakas::class);
@@ -31,34 +40,58 @@ class CpliakasSpec extends ObjectBehavior
     function let(
         GitWorkingCopy $workingCopy,
         GitWorkspaceInterface $workspace,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        GitWrapper $gitWrapper,
+        StreamableInterface $streamableEventSubscriber
     )
     {
-        $this->workingCopy   = $workingCopy;
-        $this->workspace     = $workspace;
-        $this->streamFactory = $streamFactory;
+        $this->workingCopy               = $workingCopy;
+        $this->workspace                 = $workspace;
+        $this->streamFactory             = $streamFactory;
+        $this->gitWrapper                = $gitWrapper;
+        $this->streamableEventSubscriber = $streamableEventSubscriber;
 
         $workingCopy->isCloned()->shouldBeCalled()->willReturn(true);
-        $this->beConstructedWith($workingCopy, $workspace, $streamFactory);
+        $workingCopy->getWrapper()->shouldBeCalled()->willReturn($gitWrapper);
+        $this->beConstructedWith($workingCopy, $workspace, $streamFactory, $streamableEventSubscriber);
     }
 
     function it_must_have_working_copy_in_constructor(GitWorkspaceInterface $workspace)
     {
         $this->workingCopy->isCloned()->shouldNotBeCalled();
+        $this->workingCopy->getWrapper()->shouldNotBeCalled();
         $this->shouldThrow()->during('__construct', ['invalid', $workspace]);
     }
 
-    function it_must_have_streamFactory_in_constructor(GitWorkingCopy $workingCopy, GitWorkspaceInterface $workspace, StreamFactoryInterface $streamFactory)
+    function it_must_have_streamFactory_in_constructor(
+        GitWorkingCopy $workingCopy,
+        GitWorkspaceInterface $workspace
+    )
     {
+        $this->workingCopy->isCloned()->shouldNotBeCalled();
+        $this->workingCopy->getWrapper()->shouldNotBeCalled();
+
         $this->shouldThrow()->during('__construct', [$workingCopy, $workspace]);
         $this->shouldThrow()->during('__construct', [$workingCopy, $workspace, 'string']);
-        $this->shouldNotThrow()->during('__construct', [$workingCopy, $workspace, $streamFactory]);
     }
 
     function it_must_have_workspace_in_constructor(GitWorkingCopy $workingCopy)
     {
         $this->workingCopy->isCloned()->shouldNotBeCalled();
+        $this->workingCopy->getWrapper()->shouldNotBeCalled();
         $this->shouldThrow()->during('__construct', [$workingCopy, 'invalid']);
+    }
+
+    function it_must_have_streamableEventSubscriber_in_constructor(
+        GitWorkingCopy $workingCopy,
+        GitWorkspaceInterface $workspace,
+        StreamFactoryInterface $streamFactory,
+        StreamableInterface $streamableEventSubscriber
+    )
+    {
+        $this->shouldThrow()->during('__construct', [$workingCopy, $workspace, $streamFactory]);
+        $this->shouldThrow()->during('__construct', [$workingCopy, $workspace, $streamFactory, 'string']);
+        $this->shouldNotThrow()->during('__construct', [$workingCopy, $workspace, $streamFactory, $streamableEventSubscriber]);
     }
 
     function it_should_throw_exception_if_merge_called_without_first_2_params()
@@ -115,8 +148,13 @@ class CpliakasSpec extends ObjectBehavior
         $branch1    = 'branch1';
         $branch2    = 'branch2';
         $outputFile = '/file';
+        $this->gitWrapper->streamOutput(true)->shouldBeCalled();
+        $this->streamableEventSubscriber->setStream($stream)->shouldBeCalled();
         $this->workingCopy->diff($branch1, $branch2)->shouldBeCalled();
-        $this->streamFactory->factory($outputFile)->shouldBeCalled()->willReturn($stream);
+        $this->streamFactory->makeWritableFile($outputFile)->shouldBeCalled()->willReturn($stream);
+        $this->gitWrapper->streamOutput(false)->shouldBeCalled();
+        $this->streamableEventSubscriber->unsetStream()->shouldBeCalled();
+        $stream->close()->shouldBeCalled();
 
         $this->diff($branch1, $branch2, $outputFile)->shouldReturn($this);
     }

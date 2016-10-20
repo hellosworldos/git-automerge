@@ -10,5 +10,5 @@ interface StreamFactoryInterface
      * @param string $filename
      * @return StreamInterface
      */
-    public function factory($filename);
+    public function makeWritableFile($filename);
 }

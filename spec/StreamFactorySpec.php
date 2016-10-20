@@ -2,6 +2,7 @@
 
 namespace spec\Hellosworldos\GitTools;
 
+use GuzzleHttp\Stream\Stream;
 use Hellosworldos\GitTools\StreamFactory;
 use Hellosworldos\GitTools\StreamFactoryInterface;
 use PhpSpec\ObjectBehavior;
@@ -13,5 +14,10 @@ class StreamFactorySpec extends ObjectBehavior
     {
         $this->shouldHaveType(StreamFactory::class);
         $this->shouldImplement(StreamFactoryInterface::class);
+    }
+
+    function it_should_make_writable_file_stream()
+    {
+        $this->makeWritableFile('/path/to/file')->shouldBeAnInstanceOf(Stream::class);
     }
 }
