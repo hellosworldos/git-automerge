@@ -8,6 +8,7 @@ use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\AbstractTask;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Symfony\Component\Filesystem\Filesystem;
 
 class SquashSpec extends ObjectBehavior
 {
@@ -15,7 +16,7 @@ class SquashSpec extends ObjectBehavior
      * @var GitWrapperInterface
      */
     private $gitWrapper;
-    private $streamFactory;
+    private $filesystem;
 
     function it_is_initializable()
     {
@@ -23,18 +24,21 @@ class SquashSpec extends ObjectBehavior
         $this->shouldImplement(AbstractTask::class);
     }
 
-    function let(GitWrapperInterface $gitWrapper)
+    function let(GitWrapperInterface $gitWrapper, Filesystem $filesystem)
     {
         $this->gitWrapper = $gitWrapper;
+        $this->filesystem = $filesystem;
 
-        $this->beConstructedWith($this->gitWrapper);
+        $this->beConstructedWith($this->gitWrapper, $this->filesystem);
     }
 
-    function it_expects_gitwrapper_for_constructor(GitWrapperInterface $gitWrapper)
+    function it_expects_gitwrapper_for_constructor(GitWrapperInterface $gitWrapper, Filesystem $filesystem)
     {
         $this->shouldThrow()->during('__construct', []);
-        $this->shouldNotThrow()->during('__construct', [$gitWrapper]);
         $this->shouldThrow()->during('__construct', ['notGitWrapper']);
+        $this->shouldThrow()->during('__construct', [$gitWrapper]);
+        $this->shouldThrow()->during('__construct', [$gitWrapper, 'not_filesystem']);
+        $this->shouldNotThrow()->during('__construct', [$gitWrapper, $filesystem]);
     }
 
     function it_runs(BranchInfoInterface $branchInfo)
@@ -76,22 +80,10 @@ class SquashSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
-        // @TODO call remove patch file
+        $this->filesystem->remove(Argument::type('string'))->shouldBeCalled();
 
         $this->run($branchInfo)->shouldReturn(true);
     }
-
-//    function it_should_have_stream_factory(StreamFactory $streamFactory)
-//    {
-//        $this->setStreamFactory($streamFactory)->shouldReturn($this);
-//        $this->getStreamFactory()->shouldReturn($streamFactory);
-//    }
-//
-//    function it_expects_set_filesystem_to_be_typed(Filesystem $filesystem)
-//    {
-//        $this->shouldThrow()->during('setFilesystem', ['string']);
-//        $this->shouldThrow()->during('setFilesystem', []);
-//    }
 
     function it_should_have_name()
     {

@@ -2,6 +2,7 @@
 
 namespace spec\Hellosworldos\GitTools\Task\Type;
 
+use Hellosworldos\GitTools\BranchInfoFactoryInterface;
 use Hellosworldos\GitTools\BranchInfoInterface;
 use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\Task\Type\Merge;
@@ -22,14 +23,35 @@ class MergeSpec extends ObjectBehavior
     function let(GitWrapperInterface $gitWrapper)
     {
         $this->gitWrapper = $gitWrapper;
-        $this->beConstructedWith($this->gitWrapper);
+        $this->beConstructedWith($gitWrapper);
+    }
+
+    function it_constructs_with_dependencies(GitWrapperInterface $gitWrapper)
+    {
+        $this->shouldThrow()->during('__construct', []);
+        $this->shouldThrow()->during('__construct', ['not_git_wrapper']);
+        $this->shouldNotThrow()->during('__construct', [$gitWrapper]);
     }
 
     function it_runs(BranchInfoInterface $branchInfo)
     {
-        $branchInfo->getMasterBranch()->shouldBeCalled();
-        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn('resultBranch');
-        $branchInfo->getProcessingBranches()->shouldBeCalled();
+        $masterBranch       = 'master';
+        $resultBranch       = 'result';
+        $processingBranches = ['processing1', 'processing2'];
+
+        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn($masterBranch);
+        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn($resultBranch);
+        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn($processingBranches);
+
+        $this->gitWrapper
+            ->checkout($masterBranch)
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->checkout($resultBranch)
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
 
         $this->gitWrapper
             ->checkout(Argument::type('string'))
@@ -41,8 +63,20 @@ class MergeSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
+        foreach ($processingBranches as $processingBranch) {
+            $this->gitWrapper
+                ->checkout($processingBranch)
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+
+            $this->gitWrapper
+                ->merge($processingBranch, [GitWrapperInterface::MERGE_NOFF => true])
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+        }
+
         $this->gitWrapper
-            ->merge(Argument::type('string'), Argument::type('array'))
+            ->copyBranch($resultBranch)
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
@@ -51,8 +85,6 @@ class MergeSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
-        $branchInfo->getMasterBranch()->willReturn('string');
-        $branchInfo->getProcessingBranches()->willReturn(['processing1']);
         $this->run($branchInfo)->shouldReturn(true);
     }
 

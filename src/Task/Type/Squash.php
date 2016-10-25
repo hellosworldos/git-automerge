@@ -4,11 +4,21 @@ namespace Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\AbstractTask;
 use Hellosworldos\GitTools\BranchInfoInterface;
+use Hellosworldos\GitTools\GitWrapperInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Squash extends AbstractTask
 {
     const NAME = 'squash';
+
+    private $filesystem;
+
+    public function __construct(GitWrapperInterface $gitWrapper, Filesystem $filesystem)
+    {
+        parent::__construct($gitWrapper);
+
+        $this->filesystem = $filesystem;
+    }
 
     public function run(BranchInfoInterface $branchInfo)
     {
@@ -23,6 +33,8 @@ class Squash extends AbstractTask
                 ->apply($patchFileName)
                 // @TODO add branch message generator
                 ->commit($processingBranch);
+
+            $this->getFilesystem()->remove($patchFileName);
         }
 
         return true;
@@ -37,20 +49,9 @@ class Squash extends AbstractTask
     }
 
     /**
-     * @param Filesystem $filesystem
-     * @return $this
-     */
-    public function setFilesystem(Filesystem $filesystem)
-    {
-        $this->filesystem = $filesystem;
-
-        return $this;
-    }
-
-    /**
      * @return Filesystem
      */
-    public function getFilesystem()
+    protected function getFilesystem()
     {
         return $this->filesystem;
     }

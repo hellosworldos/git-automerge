@@ -15,6 +15,7 @@ class Cpliakas implements GitWrapperInterface
     private $workspace;
     private $streamFactory;
     private $gitWrapper;
+    private $streamableEventSubscriber;
 
     /**
      * @param GitWorkingCopy $workingCopy
