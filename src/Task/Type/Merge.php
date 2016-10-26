@@ -14,7 +14,6 @@ class Merge extends AbstractTask
     /**
      * @param BranchInfoInterface $branchInfo
      * @return bool
-     * @TODO implement fault tolerance
      */
     public function run(BranchInfoInterface $branchInfo)
     {
@@ -27,14 +26,14 @@ class Merge extends AbstractTask
                 $this->mergeBranch($processingBranch, $tmpBranch);
             }
             catch (GitWrapperException $e) {
-                // @TODO add exception to chain
+                $this->addException($e);
                 $this->rollback($e);
             }
         }
 
         $this->copyResults($branchInfo->getResultBranch(), $tmpBranch);
 
-        return true;
+        return !$this->hasExceptions();
     }
 
     protected function rollback(GitWrapperException $exception) {

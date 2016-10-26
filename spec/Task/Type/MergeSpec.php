@@ -123,7 +123,8 @@ class MergeSpec extends ObjectBehavior
                 ->shouldBeCalled();
         }
 
-        $this->run($branchInfo)->shouldReturn(true);
+        $this->run($branchInfo)->shouldReturn(false);
+        $this->getExceptions()->shouldHaveCount(count($processingBranches));
     }
 
     function it_should_have_name()
