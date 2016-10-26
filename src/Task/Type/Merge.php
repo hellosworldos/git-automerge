@@ -3,15 +3,13 @@
 namespace Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\AbstractTask;
-use Hellosworldos\GitTools\BranchInfoFactoryInterface;
+use Hellosworldos\GitTools\GitWrapper\Exception as GitWrapperException;
 use Hellosworldos\GitTools\BranchInfoInterface;
 use Hellosworldos\GitTools\GitWrapperInterface;
 
 class Merge extends AbstractTask
 {
     const NAME = 'merge';
-
-    private $branchInfoFactory;
 
     /**
      * @param BranchInfoInterface $branchInfo
@@ -22,23 +20,56 @@ class Merge extends AbstractTask
     {
         $tmpBranch = $this->generateTmpBranch();
 
-        $this->getGitWrapper()
-            ->checkout($branchInfo->getMasterBranch())
-            ->copyBranch($tmpBranch);
+        $this->prepare($branchInfo->getMasterBranch(), $tmpBranch);
 
         foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
-            $this->getGitWrapper()
-                ->checkout($processingBranch)
-                ->checkout($tmpBranch)
-                ->merge($processingBranch, [GitWrapperInterface::MERGE_NOFF => true]);
+            try {
+                $this->mergeBranch($processingBranch, $tmpBranch);
+            }
+            catch (GitWrapperException $e) {
+                // @TODO add exception to chain
+                $this->rollback($e);
+            }
         }
 
-        $this->getGitWrapper()
-            ->copyBranch($branchInfo->getResultBranch())
-            ->checkout($branchInfo->getResultBranch())
-            ->removeBranch($tmpBranch);
+        $this->copyResults($branchInfo->getResultBranch(), $tmpBranch);
 
         return true;
+    }
+
+    protected function rollback(GitWrapperException $exception) {
+        $this->getGitWrapper()->mergeAbort();
+
+        return $this;
+    }
+
+    protected function prepare($masterBranch, $tmpBranch)
+    {
+        $this->getGitWrapper()
+            ->checkout($masterBranch)
+            ->copyBranch($tmpBranch);
+
+        return $this;
+    }
+
+    protected function mergeBranch($processingBranch, $tmpBranch)
+    {
+        $this->getGitWrapper()
+            ->checkout($processingBranch)
+            ->checkout($tmpBranch)
+            ->merge($processingBranch, [GitWrapperInterface::MERGE_NOFF => true]);
+
+        return $this;
+    }
+
+    protected function copyResults($resultBranch, $tmpBranch)
+    {
+        $this->getGitWrapper()
+            ->copyBranch($resultBranch)
+            ->checkout($resultBranch)
+            ->removeBranch($tmpBranch);
+
+        return $this;
     }
 
     /**

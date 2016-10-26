@@ -185,4 +185,13 @@ class Cpliakas implements GitWrapperInterface
 
         return $this;
     }
+
+    public function mergeAbort()
+    {
+        $this->getWorkingCopy()->merge([
+            static::MERGE_ABORT => true,
+        ]);
+
+        return $this;
+    }
 }

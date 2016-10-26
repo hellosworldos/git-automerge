@@ -2,9 +2,9 @@
 
 namespace spec\Hellosworldos\GitTools\Task\Type;
 
-use Hellosworldos\GitTools\BranchInfoFactoryInterface;
 use Hellosworldos\GitTools\BranchInfoInterface;
 use Hellosworldos\GitTools\GitWrapperInterface;
+use Hellosworldos\GitTools\GitWrapper\Exception;
 use Hellosworldos\GitTools\Task\Type\Merge;
 use Hellosworldos\GitTools\AbstractTask;
 use PhpSpec\ObjectBehavior;
@@ -24,6 +24,22 @@ class MergeSpec extends ObjectBehavior
     {
         $this->gitWrapper = $gitWrapper;
         $this->beConstructedWith($gitWrapper);
+
+        $this->gitWrapper
+            ->checkout(Argument::type('string'))
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->copyBranch(Argument::type('string'))
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->merge(Argument::type('string'), Argument::type('array'))
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->removeBranch(Argument::type('string'))
+            ->willReturn($this->gitWrapper);
     }
 
     function it_constructs_with_dependencies(GitWrapperInterface $gitWrapper)
@@ -88,8 +104,31 @@ class MergeSpec extends ObjectBehavior
         $this->run($branchInfo)->shouldReturn(true);
     }
 
+    function it_runs_and_handles_merge_error(BranchInfoInterface $branchInfo)
+    {
+        $masterBranch       = 'master';
+        $resultBranch       = 'result';
+        $processingBranches = ['processing1', 'processing2'];
+
+        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn($masterBranch);
+        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn($resultBranch);
+        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn($processingBranches);
+
+        foreach ($processingBranches as $processingBranch) {
+            $this->gitWrapper
+                ->merge($processingBranch, [GitWrapperInterface::MERGE_NOFF => true])
+                ->willThrow(Exception::class);
+
+            $this->gitWrapper->mergeAbort()
+                ->shouldBeCalled();
+        }
+
+        $this->run($branchInfo)->shouldReturn(true);
+    }
+
     function it_should_have_name()
     {
         $this->getName()->shouldBe(Merge::NAME);
     }
 }
+

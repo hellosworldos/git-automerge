@@ -5,6 +5,7 @@ namespace Hellosworldos\GitTools;
 interface GitWrapperInterface
 {
     const MERGE_NOFF    = 'no-ff';
+    const MERGE_ABORT   = 'abort';
     const BRANCH_FORCE  = 'force';
     const BRANCH_DELETE = 'delete';
 
@@ -58,4 +59,9 @@ interface GitWrapperInterface
      * @return $this
      */
     public function commit($message);
+
+    /**
+     * @return $this
+     */
+    public function mergeAbort();
 }

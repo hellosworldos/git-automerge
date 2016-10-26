@@ -109,9 +109,18 @@ class CpliakasSpec extends ObjectBehavior
 
     function it_should_merge_branches()
     {
-        $this->workingCopy->merge(Argument::type('string'), Argument::type('array'))->shouldBeCalled();
+        $options = [GitWrapperInterface::MERGE_NOFF => true];
+        $this->workingCopy->merge(Argument::type('string'), $options)->shouldBeCalled();
 
-        $this->merge('joinBranch', [GitWrapperInterface::MERGE_NOFF => true])->shouldReturn($this);
+        $this->merge('joinBranch', $options)->shouldReturn($this);
+    }
+
+    function it_should_abort_merge()
+    {
+        $options = [GitWrapperInterface::MERGE_ABORT => true];
+        $this->workingCopy->merge($options)->shouldBeCalled();
+
+        $this->mergeAbort()->shouldReturn($this);
     }
 
     function it_should_copy_branch()
