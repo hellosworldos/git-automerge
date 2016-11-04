@@ -60,6 +60,16 @@ class MergeSpec extends ObjectBehavior
         $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn($processingBranches);
 
         $this->gitWrapper
+            ->clean()
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->stash()
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
             ->checkout($masterBranch)
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
@@ -109,6 +119,9 @@ class MergeSpec extends ObjectBehavior
         $masterBranch       = 'master';
         $resultBranch       = 'result';
         $processingBranches = ['processing1', 'processing2'];
+
+        $this->gitWrapper->clean()->willReturn($this->gitWrapper);
+        $this->gitWrapper->stash()->willReturn($this->gitWrapper);
 
         $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn($masterBranch);
         $branchInfo->getResultBranch()->shouldBeCalled()->willReturn($resultBranch);

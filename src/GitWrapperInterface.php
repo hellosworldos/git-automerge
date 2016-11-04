@@ -8,6 +8,7 @@ interface GitWrapperInterface
     const MERGE_ABORT   = 'abort';
     const BRANCH_FORCE  = 'force';
     const BRANCH_DELETE = 'delete';
+    const STASH         = 'stash';
 
     /**
      * @param string $withBranch
@@ -64,4 +65,14 @@ interface GitWrapperInterface
      * @return $this
      */
     public function mergeAbort();
+
+    /**
+     * @return $this
+     */
+    public function clean();
+
+    /**
+     * @return $this
+     */
+    public function stash();
 }

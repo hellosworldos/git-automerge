@@ -70,7 +70,15 @@ class Cpliakas implements GitWrapperInterface
      */
     public function merge($withBranch, array $options)
     {
-        $this->getWorkingCopy()->merge($withBranch, $options);
+        try {
+            $this->getWorkingCopy()->merge($withBranch, $options);
+        }
+        catch (\Exception $e) {
+            $gitException = new Exception('merge: '.$withBranch);
+            $gitException->setNextException($e);
+
+            throw $gitException;
+        }
 
         return $this;
     }
@@ -191,6 +199,23 @@ class Cpliakas implements GitWrapperInterface
         $this->getWorkingCopy()->merge([
             static::MERGE_ABORT => true,
         ]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function clean()
+    {
+        $this->getWorkingCopy()->clean();
+
+        return $this;
+    }
+
+    public function stash()
+    {
+        $this->getWorkingCopy()->run([static::STASH]);
 
         return $this;
     }

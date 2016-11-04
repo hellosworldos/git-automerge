@@ -4,9 +4,11 @@ namespace spec\Hellosworldos\GitTools\GitWrapper;
 
 use GitWrapper\GitWorkingCopy;
 use GitWrapper\GitWrapper;
+use GitWrapper\GitException;
 use GuzzleHttp\Stream\StreamInterface;
 use Hellosworldos\GitTools\EventSubscriber\StreamableInterface;
 use Hellosworldos\GitTools\GitWrapper\Cpliakas;
+use Hellosworldos\GitTools\GitWrapper\Exception;
 use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\GitWorkspaceInterface;
 use Hellosworldos\GitTools\StreamFactoryInterface;
@@ -115,6 +117,13 @@ class CpliakasSpec extends ObjectBehavior
         $this->merge('joinBranch', $options)->shouldReturn($this);
     }
 
+    function it_should_throw_own_exception_on_merge()
+    {
+        $this->workingCopy->merge(Argument::type('string'), Argument::type('array'))->willThrow(GitException::class);
+
+        $this->shouldThrow(Exception::class)->during('merge', ['joinBranch', []]);
+    }
+
     function it_should_abort_merge()
     {
         $options = [GitWrapperInterface::MERGE_ABORT => true];
@@ -129,6 +138,20 @@ class CpliakasSpec extends ObjectBehavior
         $this->workingCopy->branch($newBranch, [GitWrapperInterface::BRANCH_FORCE => true])->shouldBeCalled();
 
         $this->copyBranch($newBranch)->shouldReturn($this);
+    }
+
+    function it_should_clean()
+    {
+        $this->workingCopy->clean()->shouldBeCalled();
+
+        $this->clean()->shouldReturn($this);
+    }
+
+    function it_should_stash()
+    {
+        $this->workingCopy->run([Cpliakas::STASH])->shouldBeCalled();
+
+        $this->stash()->shouldReturn($this);
     }
 
     function it_should_remove_branch()

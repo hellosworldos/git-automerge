@@ -45,6 +45,8 @@ class Merge extends AbstractTask
     protected function prepare($masterBranch, $tmpBranch)
     {
         $this->getGitWrapper()
+            ->stash()
+            ->clean()
             ->checkout($masterBranch)
             ->copyBranch($tmpBranch);
 
