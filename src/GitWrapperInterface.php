@@ -9,6 +9,7 @@ interface GitWrapperInterface
     const BRANCH_FORCE  = 'force';
     const BRANCH_DELETE = 'delete';
     const STASH         = 'stash';
+    const REBASE_ABORT  = 'abort';
 
     /**
      * @param string $withBranch
@@ -75,4 +76,9 @@ interface GitWrapperInterface
      * @return $this
      */
     public function stash();
+
+    /**
+     * @return $this
+     */
+    public function rebaseAbort();
 }

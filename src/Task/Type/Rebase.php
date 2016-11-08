@@ -4,28 +4,70 @@ namespace Hellosworldos\GitTools\Task\Type;
 
 use Hellosworldos\GitTools\AbstractTask;
 use Hellosworldos\GitTools\BranchInfoInterface;
+use Hellosworldos\GitTools\GitWrapper\Exception as GitWrapperException;
 
+/**
+ * Class Rebase
+ *
+ * Rebase multiple branches into one
+ *
+ * @package Hellosworldos\GitTools\Task\Type
+ */
 class Rebase extends AbstractTask
 {
     const NAME = 'rebase';
 
     public function run(BranchInfoInterface $branchInfo)
     {
-        foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
-            $tmpBranch = $this->generateTmpBranch();
+        $tmpBranch = $this->generateTmpBranch();
 
-            $this->getGitWrapper()
-                ->checkout($branchInfo->getMasterBranch())
-                ->checkout($processingBranch)
-                ->copyBranch($tmpBranch)
-                ->checkout($tmpBranch)
-                ->rebase($branchInfo->getMasterBranch())
-                ->copyBranch($branchInfo->getResultBranch())
-                ->checkout($branchInfo->getResultBranch())
-                ->removeBranch($tmpBranch);
+        $this->prepare($branchInfo, $tmpBranch);
+
+        foreach ($branchInfo->getProcessingBranches() as $processingBranch) {
+            try {
+                $this->rebaseBranch($processingBranch, $branchInfo->getMasterBranch(), $tmpBranch);
+            }
+            catch (GitWrapperException $e) {
+                $this->addException($e);
+                $this->rollback($e);
+            }
         }
 
-        return true;
+        $this->copyResults($branchInfo, $tmpBranch);
+
+        return !$this->hasExceptions();
+    }
+
+    protected function prepare(BranchInfoInterface $branchInfo, $tmpBranch)
+    {
+        $this->getGitWrapper()
+            ->stash()
+            ->clean()
+            ->checkout($branchInfo->getMasterBranch())
+            ->copyBranch($tmpBranch);
+    }
+
+    protected function rollback(GitWrapperException $exception) {
+        $this->getGitWrapper()->rebaseAbort();
+
+        return $this;
+    }
+
+    protected function rebaseBranch($processingBranch, $masterBranch, $tmpBranch)
+    {
+        $this->getGitWrapper()
+            ->checkout($processingBranch)
+            ->rebase($masterBranch)
+            ->rebase($tmpBranch)
+            ->copyBranch($tmpBranch);
+    }
+
+    protected function copyResults(BranchInfoInterface $branchInfo, $tmpBranch)
+    {
+        $this->getGitWrapper()
+            ->copyBranch($branchInfo->getResultBranch())
+            ->checkout($branchInfo->getResultBranch())
+            ->removeBranch($tmpBranch);
     }
 
     /**

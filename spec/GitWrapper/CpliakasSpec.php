@@ -208,4 +208,12 @@ class CpliakasSpec extends ObjectBehavior
 
         $this->commit($message)->shouldReturn($this);
     }
+
+    function it_should_abort_rebase()
+    {
+        $options = [GitWrapperInterface::REBASE_ABORT => true];
+        $this->workingCopy->rebase($options)->shouldBeCalled();
+
+        $this->rebaseAbort()->shouldReturn($this);
+    }
 }

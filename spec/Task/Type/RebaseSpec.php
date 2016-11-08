@@ -5,6 +5,7 @@ namespace spec\Hellosworldos\GitTools\Task\Type;
 use Hellosworldos\GitTools\BranchInfoInterface;
 use Hellosworldos\GitTools\GitWrapperInterface;
 use Hellosworldos\GitTools\Task\Type\Rebase;
+use Hellosworldos\GitTools\GitWrapper\Exception;
 use Hellosworldos\GitTools\AbstractTask;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -27,22 +28,58 @@ class RebaseSpec extends ObjectBehavior
 
     function it_runs(BranchInfoInterface $branchInfo)
     {
-        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn('masterBranch');
-        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn('resultBranch');
-        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn(['processing1']);
+        $masterBranch       = 'masterBranch';
+        $resultBranch       = 'resultBranch';
+        $processingBranches = ['processing1', 'processing2'];
+
+        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn($masterBranch);
+        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn($resultBranch);
+        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn($processingBranches);
 
         $this->gitWrapper
-            ->checkout(Argument::type('string'))
+            ->stash()
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->clean()
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        $this->gitWrapper
+            ->checkout($masterBranch)
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
+        foreach ($processingBranches as $processingBranch) {
+            $this->gitWrapper
+                ->checkout(Argument::type('string'))
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+
+            $this->gitWrapper
+                ->checkout($processingBranch)
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+
+            $this->gitWrapper
+                ->rebase($masterBranch)
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+
+            $this->gitWrapper
+                ->rebase(Argument::type('string'))
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+
+            $this->gitWrapper
+                ->copyBranch(Argument::type('string'))
+                ->shouldBeCalled()
+                ->willReturn($this->gitWrapper);
+        }
 
         $this->gitWrapper
             ->copyBranch(Argument::type('string'))
-            ->shouldBeCalled()
-            ->willReturn($this->gitWrapper);
-
-        $this->gitWrapper
-            ->rebase(Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
@@ -51,7 +88,41 @@ class RebaseSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->gitWrapper);
 
+        $this->gitWrapper
+            ->checkout($resultBranch)
+            ->shouldBeCalled()
+            ->willReturn($this->gitWrapper);
+
         $this->run($branchInfo)->shouldReturn(true);
+    }
+
+    function it_runs_and_handles_rebase_error(BranchInfoInterface $branchInfo)
+    {
+        $masterBranch       = 'master';
+        $resultBranch       = 'result';
+        $processingBranches = ['processing1', 'processing2'];
+
+        $this->gitWrapper->clean()->willReturn($this->gitWrapper);
+        $this->gitWrapper->stash()->willReturn($this->gitWrapper);
+        $this->gitWrapper->checkout(Argument::type('string'))->willReturn($this->gitWrapper);
+        $this->gitWrapper->copyBranch(Argument::type('string'))->willReturn($this->gitWrapper);
+        $this->gitWrapper->removeBranch(Argument::type('string'))->willReturn($this->gitWrapper);
+
+        $branchInfo->getMasterBranch()->shouldBeCalled()->willReturn($masterBranch);
+        $branchInfo->getResultBranch()->shouldBeCalled()->willReturn($resultBranch);
+        $branchInfo->getProcessingBranches()->shouldBeCalled()->willReturn($processingBranches);
+
+        foreach ($processingBranches as $processingBranch) {
+            $this->gitWrapper
+                ->rebase(Argument::type('string'))
+                ->willThrow(Exception::class);
+
+            $this->gitWrapper->rebaseAbort()
+                ->shouldBeCalled();
+        }
+
+        $this->run($branchInfo)->shouldReturn(false);
+        $this->getExceptions()->shouldHaveCount(count($processingBranches));
     }
 
     function it_should_have_name()

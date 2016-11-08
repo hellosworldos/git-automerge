@@ -219,4 +219,16 @@ class Cpliakas implements GitWrapperInterface
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function rebaseAbort()
+    {
+        $this->getWorkingCopy()->rebase([
+            static::REBASE_ABORT => true,
+        ]);
+
+        return $this;
+    }
 }
