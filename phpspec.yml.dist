@@ -1,5 +1,5 @@
 suites:
   main:
-    namespace: Hellosworldos\GitTools
-    psr4_prefix: Hellosworldos\GitTools
-    src_path: ./src/
+    namespace: Hellosworldos
+    psr4_prefix: Hellosworldos
+    src_path: src

@@ -5,12 +5,12 @@
     "description": "Library to merge git branches automatically for acceptance testing",
     "autoload": {
         "psr-4": {
-            "Hellosworldos\\GitTools\\": "src/"
+            "Hellosworldos\\Component\\GitTools\\": "src/Component/GitTools/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "spec\\Hellosworldos\\GitTools\\": "spec/"
+            "spec\\Hellosworldos\\Component\\GitTools\\": "spec/Component/GitTools/"
         }
     },
     "require": {
