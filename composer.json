@@ -5,12 +5,14 @@
     "description": "Library to merge git branches automatically for acceptance testing",
     "autoload": {
         "psr-4": {
-            "Hellosworldos\\Component\\GitTools\\": "src/Component/GitTools/"
+            "Hellosworldos\\Component\\GitTools\\": "src/Hellosworldos/Component/GitTools/",
+            "Hellosworldos\\Bundle\\GitToolsBundle\\": "src/Hellosworldos/Bundle/GitToolsBundle/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "spec\\Hellosworldos\\Component\\GitTools\\": "spec/Component/GitTools/"
+            "spec\\Hellosworldos\\Component\\GitTools\\": "src/Component/GitTools/spec/",
+            "spec\\Hellosworldos\\Bundle\\GitToolsBundle\\": "src/Bundle/GitToolsBundle/spec/"
         }
     },
     "require": {
@@ -18,7 +20,9 @@
         "cpliakas/git-wrapper": "^1.7",
         "symfony/filesystem": "^3.1||^2.8",
         "symfony/event-dispatcher": "^3.1||^2.8",
-        "guzzlehttp/streams": "^3.0"
+        "guzzlehttp/streams": "^3.0",
+        "symfony/http-kernel": "^3.1||^2.8",
+        "symfony/dependency-injection": "^3.1||^2.8"
     },
     "require-dev": {
         "phpspec/phpspec": "^3.1||^2.5"

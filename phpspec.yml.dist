@@ -1,5 +1,12 @@
 suites:
-  main:
-    namespace: Hellosworldos
-    psr4_prefix: Hellosworldos
-    src_path: src
+  GitTools:
+    namespace: Hellosworldos\Component\GitTools
+    psr4_prefix: Hellosworldos\Component\GitTools
+    spec_path: src/Hellosworldos/Component/GitTools
+    src_path: src/Hellosworldos/Component/GitTools
+
+  GitToolsBundle:
+    namespace: Hellosworldos\Bundle\GitToolsBundle
+    psr4_prefix: Hellosworldos\Bundle\GitToolsBundle
+    spec_path: src/Hellosworldos/Bundle/GitToolsBundle
+    src_path: src/Hellosworldos/Bundle/GitToolsBundle
