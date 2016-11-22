@@ -1,0 +1,3 @@
+#hellosworldos_git_tools:
+#    resource: "@HellosworldosGitToolsBundle/Resources/config/routing.yml"
+#    prefix:   /

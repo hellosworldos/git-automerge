@@ -1,0 +1,37 @@
+{
+    "name": "hellosworldos/git-tools",
+    "license": "MIT",
+    "type": "project",
+    "description": "Library to merge git branches automatically for acceptance testing",
+    "autoload": {
+        "psr-4": {
+            "Hellosworldos\\Component\\GitTools\\": "src/Hellosworldos/Component/GitTools/",
+            "Hellosworldos\\Bundle\\GitToolsBundle\\": "src/Hellosworldos/Bundle/GitToolsBundle/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\Hellosworldos\\Component\\GitTools\\": "src/Component/GitTools/spec/",
+            "spec\\Hellosworldos\\Bundle\\GitToolsBundle\\": "src/Bundle/GitToolsBundle/spec/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "cpliakas/git-wrapper": "^1.7",
+        "symfony/filesystem": "^3.1||^2.8",
+        "symfony/event-dispatcher": "^3.1||^2.8",
+        "guzzlehttp/streams": "^3.0",
+        "symfony/http-kernel": "^3.1||^2.8",
+        "symfony/dependency-injection": "^3.1||^2.8",
+        "symfony/console": "^3.1|^2.8"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^3.1||^2.5",
+        "sensio/generator-bundle": "^3.1"
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var"
+    }
+}

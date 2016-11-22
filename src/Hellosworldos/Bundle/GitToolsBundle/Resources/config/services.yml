@@ -1,0 +1,4 @@
+services:
+#    hellosworldos_git_tools.example:
+#        class: Hellosworldos\Bundle\GitToolsBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
